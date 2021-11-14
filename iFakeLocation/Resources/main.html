@@ -66,6 +66,9 @@
 					<div class="col">
 						<button type="button" class="btn btn-primary w-100" data-toggle="popover" id="stop-location" disabled>Stop Fake Location</button>
 					</div>
+                    <div class="col">
+						<button type="button" class="btn btn-primary w-100" data-toggle="popover" id="start-walking" disabled>Random Walk</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -170,8 +173,10 @@
 							$('#stop-location').removeAttr('disabled');
 						else
 							$('#stop-location').attr('disabled', true);
-						if (marker)
+						if (marker) {
 							$('#set-location').removeAttr('disabled');
+                            $('#start-walking').removeAttr('disabled');
+                        }
 					}
 				});
 			});
@@ -315,8 +320,10 @@
 					marker = new L.marker(e.latlng, {draggable: true}).addTo(map);
 				else
 					marker.setLatLng(e.latlng);
-				if (devices && devices.length)
+				if (devices && devices.length) {
 					$('#set-location').removeAttr('disabled');
+                    $('#start-walking').removeAttr('disabled');
+                }
 			});
 
 			function searchLocation() {
@@ -330,9 +337,11 @@
 							marker = new L.marker([r[0].y, r[0].x], {draggable: true}).addTo(map);
 						else
 							marker.setLatLng([r[0].y, r[0].x]);
-						map.setView([r[0].y, r[0].x], 13);
-						if (devices && devices.length)
+						map.setView([r[0].y, r[0].x], 16);
+						if (devices && devices.length) {
 							$('#set-location').removeAttr('disabled');
+                            $('#start-walking').removeAttr('disabled');
+                        }
 					}
 				});
 			}
@@ -361,6 +370,30 @@
 						map.setView([0, 0], 2);
 				});
 			});
+            
+            // Random walk function
+            var x_start = 47.167;
+            var y_start = 27.574;
+            var x_new, x_old, y_new, y_old;
+            var start_point = true;
+            function randomwalk() {
+                if (start_point) {
+                    x_new = x_start + (Math.random() * 0.00099 - 0.00049);
+                    y_new = y_start + (Math.random() * 0.00099 - 0.00049);
+                    start_point = false;
+                }
+                else {
+                    x_new = x_old + (Math.random() * 0.00099 - 0.00049);
+                    y_new = y_old + (Math.random() * 0.00099 - 0.00049);
+                }
+                x_old = x_new;
+                y_old = y_new;
+                document.getElementById("query").value = x_new.toFixed(6).concat(',', y_new.toFixed(6));
+                searchLocation();
+                locationPerform($('#set-location').attr('disabled', true), setLocation);
+                setTimeout(randomwalk, 5000);
+            }
+            $('#start-walking').click(randomwalk);
 		</script>
 	</body>
 </html>
