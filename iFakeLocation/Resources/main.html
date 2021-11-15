@@ -373,7 +373,7 @@
             
             // Random walk function
             var x_new, x_old, y_new, y_old;
-			var start_point = true;
+			var start_point;
 			var walker_running = false;
             function randomwalk() {
 				if (start_point) {
@@ -392,29 +392,22 @@
                 //searchLocation();
                 locationPerform($('#set-location').attr('disabled', true), setLocation);
                 if (walker_running) {
-					setTimeout(randomwalk, 5000);
+					setTimeout(randomwalk, 3000);
 				}
             }
 			$('#start-walking').click(function () {
 				walker_running = !walker_running;
 				if (walker_running) {
-					$('#start-walking').popover({
-						html: true,
-						content: 'Random Walker RUNNING!',
-						trigger: 'manual',
-						placement: 'bottom'
-					});
+					$('#start-walking').attr('data-content','Random Walker RUNNING!');
+					$('#start-walking').popover("show");
+					window.alert("START");
 				}
 				else {
-                    $('#start-walking').popover({
-                        html: true,
-                        content: 'Random Walker STOPPED!',
-                        trigger: 'manual',
-                        placement: 'bottom'
-                    });
+					$('#start-walking').attr('data-content','Random Walker STOPPED!');
+					$('#start-walking').popover("show");
+					window.alert("STOP");
 				}
-                $('#start-walking').popover('hide');
-                $('#start-walking').popover('show');
+				start_point = true;
 				randomwalk();
 			});
 		</script>
